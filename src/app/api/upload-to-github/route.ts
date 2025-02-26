@@ -1,9 +1,16 @@
 // app/api/github-upload/route.ts
 import { NextResponse } from "next/server";
 
+interface RequestBody {
+  message: string;
+  content: string;
+  branch: string;
+  sha?: string;
+}
+
 export async function POST(request: Request) {
   try {
-    const { githubUsername, githubToken, githubRepo, path, filename, content } =
+    const { githubToken, githubRepo, path, filename, content } =
       await request.json();
 
     // 필수 필드 검증
@@ -42,10 +49,11 @@ export async function POST(request: Request) {
       }
     } catch (error) {
       // 파일이 존재하지 않는 경우 무시
+      console.error("파일 존재 여부 확인 중 오류:", error);
     }
 
     // GitHub API 요청 본문
-    const requestBody: any = {
+    const requestBody: RequestBody = {
       message: `Update ${filename} from Notion`,
       content: Buffer.from(content).toString("base64"),
       branch: "main", // 대상 브랜치, 필요시 파라미터로 받아서 변경 가능

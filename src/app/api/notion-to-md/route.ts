@@ -83,6 +83,7 @@ function extractPageIdFromUrl(url: string): string | null {
 
     return null;
   } catch (error) {
+    console.error("URL 파싱 중 오류:", error);
     return null;
   }
 }
